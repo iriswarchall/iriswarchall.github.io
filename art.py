@@ -37,7 +37,6 @@ header = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
 	<div class="one-third" style="height: 300px">
 	  <h1><a href="index.html">Iris Warchall</a></h1>
-	  <h3><a href="art.html">Artwork</a></h3>
 	  <h3><a href="bio.html">About / Contact</a></h3>
 	</div>
 
@@ -69,7 +68,7 @@ footer = '''
 
 images = os.listdir('images')
 
-with open('art.html', 'w') as fp:
+with open('index.html', 'w') as fp:
 
     image_section = []
 
