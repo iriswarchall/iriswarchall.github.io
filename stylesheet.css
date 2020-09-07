@@ -67,3 +67,20 @@ a {
 	clear:both;
 	padding:20px;
 }
+
+.imagerow {
+    padding: 0px 10px 10px 10px;
+    height: 315px;
+}
+
+.imagebox {
+    width: 315px;
+    height: 315px;
+}
+
+.grid {
+    margin: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
