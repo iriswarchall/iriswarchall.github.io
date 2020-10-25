@@ -53,6 +53,10 @@ h3 {
    margin-top: 6px;
 }
 
+h4 {
+   font-size: 11px;
+}
+
 p,li {
   font-size: 13px;
   text-align: justify;
@@ -70,7 +74,7 @@ a {
 
 .imagerow {
     padding: 0px 10px 10px 10px;
-    height: 315px;
+    height: 331px;
 }
 
 .imagebox {

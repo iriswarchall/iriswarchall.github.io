@@ -5,6 +5,9 @@ import os
 
 from PIL import Image
 
+folders = ['change', 'landscapes', 'shadows', 'textures', 'window_view', 'other_abstraction']
+links = ['          <h4><a href="%s.html">%s</a></h4>' % (x, ' '.join([y.title() for y in x.split('_')])) for x in folders]
+
 header = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -14,7 +17,7 @@ header = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
   <head>
 
-    <title>Iris Warchall</title>
+    <title>Iris Warchall: %%s</title>
 
     <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 
@@ -38,10 +41,12 @@ header = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	<div class="one-third" style="height: 300px">
 	  <h1><a href="index.html">Iris Warchall</a></h1>
 	  <h3><a href="bio.html">About / Contact</a></h3>
+          <h3>Art</h3>
+%s
 	</div>
 
-	<div class="two-thirds" style="width: 660px; height: %dpx">
-'''
+	<div class="two-thirds" style="width: 660px; height: %%dpx">
+''' % ('\n'.join(links))
 
 footer = '''
 	</div>
@@ -66,55 +71,59 @@ footer = '''
 </html>
 '''
 
-images = os.listdir('images')
+for category in folders:
 
-with open('index.html', 'w') as fp:
+    images = sorted(os.listdir(category))
 
-    image_section = []
+    with open('%s.html' % category, 'w') as fp:
 
-    idx = 0
-    height = 10
-    for image in images:
+        category_name = ' '.join([x.title() for x in category.split('_')])
+        image_section = ['          <h1 style="margin: 10px">%s</h1>' % category_name]
 
-        left = (idx % 2 == 0)
+        idx = 0
+        height = 69
+        for image in images:
 
-        if idx == 0:
-            image_section.append(
-                '          <div class="imagerow" style="padding: 10px">')
-        elif left:
+            left = (idx % 2 == 0)
+
+            if idx == 0:
+                image_section.append(
+                    '          <div class="imagerow" style="padding: 10px">')
+            elif left:
+                image_section.extend([
+                    '          </div>',
+                    '          <div class="imagerow">'])
+
+            (x, y) = Image.open(category + '/' + image).size
+
+            image_float = 'left' if left else 'right'
+
+            if x > y:
+                image_height = int((315.0 * y) / x)
+                padding = (315 - image_height) / 2
+                image_style = 'width="315px" style="margin-top: %dpx"' % padding
+            else:
+                image_style = 'height="315px"'
+        
             image_section.extend([
-                '          </div>',
-                '          <div class="imagerow">'])
-
-        (x, y) = Image.open('images/' + image).size
-
-        image_float = 'left' if left else 'right'
-
-        if x > y:
-            image_height = int((315.0 * y) / x)
-            padding = (315 - image_height) / 2
-            image_style = 'width="315px" style="margin-top: %dpx"' % padding
-        else:
-            image_style = 'height="315px"'
+                '            <div class="imagebox" style="float: %s">' % image_float,
+                '              <a href="%s/%s">' % (category, image),
+                '                <img src="%s/%s" class="grid" %s />' % (category, image, image_style),
+                '                <h4 style="margin: 4px">%s</h4>' % ' '.join([x.title() for x in image[:-4].split('_')]),
+                '              </a>',
+                '            </div>',
+            ])
         
-        image_section.extend([
-            '            <div class="imagebox" style="float: %s">' % image_float,
-            '              <a href="images/%s">' % image,
-            '                <img src="images/%s" class="grid" %s />' % (image, image_style),
-            '              </a>',
-            '            </div>',
-        ])
-        
-        if left:
-            height += 325
+            if left:
+                height += 341
 
-        idx += 1
+            idx += 1
 
-    image_section.append('          </div>')
+        image_section.append('          </div>')
     
-    print(header % height, file=fp)
+        print(header % (category_name, height), file=fp)
 
-    print('\n'.join(image_section), file=fp)
+        print('\n'.join(image_section), file=fp)
     
-    print(footer, file=fp)
+        print(footer, file=fp)
 
